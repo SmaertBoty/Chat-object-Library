@@ -1,4 +1,4 @@
-Usage:
+# Usage:
 
 msg = Chat("<KewlUsrnm> This is a message sent to the public chat!")
 
@@ -11,12 +11,12 @@ msg = Chat("KewlUsrnm made the advancement [This is an advancement]")
 msg = Chat("KewlUsrnm this is a message sent by the server!)
 
 
-Realistic usage:
+## Realistic usage:
 
 msg = Chat(chat_event.message)
 
 
-Attributes:
+# Attributes:
 
 msg.text -> the whole raw text
 
