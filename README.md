@@ -1,14 +1,19 @@
 Usage:
+
 msg = Chat("<KewlUsrnm> This is a message sent to the public chat!")
 msg = Chat("[KewlUsrnm] This is a message sent to the public chat! But with different brackets!")
 msg = Chat("KewlUsrnm whisperes to you: This is a private message!"")
 msg = Chat("KewlUsrnm made the advancement [This is an advancement]")
 msg = Chat("KewlUsrnm this is a message sent by the server!)
 
+
 Realistic usage:
+
 msg = Chat(chat_event.message)
 
+
 Attributes:
+
 msg.text -> the whole raw text
 print(msg.user) -> the username in the message (server if None)
 print(msg.type) -> the type of the message ("chat" for the public chat, "whisper" for whispers, "advancement" for advancements, "terminal" for server messages)
