@@ -8,8 +8,8 @@ class Chat:
             raise ValueError("Cannot convert empty string into a Chat object")
         self.text = s
         self.advancement = False
-        if re.search(r"<.*>",self.text) is not None:
-            self.user = re.match(r"<(.*?)>",self.text).group(1)
+        if re.search(r".*?<(.*?)>",self.text) is not None:
+            self.user = re.match(r".*?<(.*?)>",self.text).group(1)
             self.content = self.text.replace(f"<{self.user}> ","")
             self.type = "chat"
         elif re.search(r"\[.*\]",self.text) is not None:
@@ -31,8 +31,53 @@ class Chat:
         self.prefix = re.match(r".",self.content).group()
         self.suffix = self.text[-1]
         self.timestamp = time()
+        self.attributes = ["text","advancement","user","content","type","words","prefix","suffix","timestamp","attributes"]
     
     def remove_prefix(self) -> str:
         """Remove the prefix from self.content and self.words"""
         self.content = re.match(fr"{self.prefix}(.*)",self.content).group(1)
         self.words = self.content.split(" ")
+    
+    def strip(self,keep:list=None) -> object:
+        """Remove all attributes from the object, except self.text"""
+        attributes = self.attributes
+        for i in attributes:
+            try: k = i not in keep 
+            except: k = True
+            if hasattr(self, i) and k and i != "text":
+                self.__dict__.pop(i, None)
+        return self
+    
+    def custom_attributes(self,template:list=None):
+        """Create custom attributes using a template"""
+        if template is None or not isinstance(template, list):
+            raise TypeError(f"Cannot use {(type(template).__name__)!r} as a template")
+        elif template == []:
+            raise ValueError(f"Expected a non empty list, but got {template}")
+
+        text = self.text
+        for i in template:
+            prefix = i[0]
+            suffix = i[-1]
+            s_prefix = prefix
+            s_suffix = suffix
+            if prefix in "[]":
+                prefix = fr"\{prefix}"
+            if suffix in r"[]*":
+                suffix = fr"\{suffix}"
+
+            match = re.match(rf"(.*?{prefix})(.*?)({suffix}.*?)",i)
+            attribute = match.group(2)
+            if suffix != r"\*":
+                try: value = re.match(fr".*?{prefix}(.*?){suffix}",text).group(1)
+                except: value = None
+                rplace = fr"{s_prefix}{value}{s_suffix}"
+            else:
+                print(prefix)
+                try: value = re.match(fr"{prefix}(.*)",text).group(1)
+                except: value = None
+                rplace = ""
+            text = text.replace(rplace,"")
+            setattr(self,attribute,value)
+        return self
+
