@@ -35,3 +35,13 @@ print(msg.timestamp) -> the exact time the text was converted to Chat object
 print(msg.prefix) -> the prefix of the contents. Can be used for detecting custom commands
 
 print(msg.suffix) -> the suffix of the content
+
+# Custom attributes:
+
+string = "[239] VIP <KewlUsrnm> hello guys"
+txt = Chat(string).strip().custom_attributes(["[level]"," rank ","<user>"," content*"])
+
+print(txt.level) -> 239
+print(txt.rank) -> VIP
+print(txt.user) -> KewlUsrnm
+print(txt.content) -> hello guys
