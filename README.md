@@ -39,7 +39,9 @@ print(msg.suffix) -> the suffix of the content
 # Custom attributes:
 
 string = "[239] VIP <KewlUsrnm> hello guys"
+
 txt = Chat(string).strip().custom_attributes(["[level]"," rank ","<user>"," content*"])
+
 
 print(txt.level) -> 239
 print(txt.rank) -> VIP
