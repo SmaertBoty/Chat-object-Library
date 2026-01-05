@@ -61,9 +61,9 @@ class Chat:
             suffix = i[-1]
             s_prefix = prefix
             s_suffix = suffix
-            if prefix in "[]":
+            if prefix in r".^$*+?{}[]\|()":
                 prefix = fr"\{prefix}"
-            if suffix in r"[]*":
+            if suffix in r".^$*+?{}[]\|()":
                 suffix = fr"\{suffix}"
 
             match = re.match(rf"(.*?{prefix})(.*?)({suffix}.*?)",i)
@@ -71,7 +71,7 @@ class Chat:
             if suffix != r"\*":
                 try: value = re.match(fr".*?{prefix}(.*?){suffix}",text).group(1)
                 except: value = None
-                rplace = fr"{s_prefix}{value}{s_suffix}"
+                rplace = re.match(fr"(.*?{prefix}.*?{suffix})",text).group(1)
             else:
                 print(prefix)
                 try: value = re.match(fr"{prefix}(.*)",text).group(1)
@@ -80,4 +80,3 @@ class Chat:
             text = text.replace(rplace,"")
             setattr(self,attribute,value)
         return self
-
