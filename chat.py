@@ -12,15 +12,13 @@ class Chat:
             self.user = re.match(r".*?<(.*?)>",self.text).group(1)
             self.content = self.text.replace(f"<{self.user}> ","")
             self.type = "chat"
-        elif re.search(r"\[.*\]",self.text) is not None:
-            self.user = re.match(r"\[(.*?)\]",self.text).group(1)
-            self.content = self.text.replace(f"[{self.user}] ","")
-            self.type = "chat"
         elif " whispers to you: " in self.text:
             self.user, self.content = re.match(r"(.*) whispers to you: (.*)",self.text).groups()
             self.type = "whisper"
-        elif " has made the advancement " in self.text:
-            self.user, self.advancement = re.match(r"(.*) has made the advancement \[(.*)\]",self.text).groups(1)
+        elif re.search(r"^(.*?) has (made the advancement|completed the challenge|reached the goal) \[(.*)\]",self.text):
+            match = re.match(r"(.*?) has (made the advancement|completed the challenge|reached the goal) \[(.*)\]",self.text)
+            self.user = match.group(1) 
+            self.advancement = match.group(2)
             self.content = ""
             self.type = "advancement"
         else:
@@ -28,8 +26,10 @@ class Chat:
             self.content = self.text
             self.type = "terminal"
         self.words = self.content.split(" ")
-        self.prefix = re.match(r".",self.content).group()
-        self.suffix = self.text[-1]
+        try: self.prefix = re.match(r".",self.content).group()
+        except: self.prefix = ""
+        try: self.suffix = self.content[-1]
+        except: self.suffix = ""
         self.timestamp = time()
         self.attributes = ["text","advancement","user","content","type","words","prefix","suffix","timestamp","attributes"]
     
@@ -54,29 +54,29 @@ class Chat:
             raise TypeError(f"Cannot use {(type(template).__name__)!r} as a template")
         elif template == []:
             raise ValueError(f"Expected a non empty list, but got {template}")
-
+        self.attributes = []
         text = self.text
         for i in template:
             prefix = i[0]
             suffix = i[-1]
-            s_prefix = prefix
-            s_suffix = suffix
             if prefix in r".^$*+?{}[]\|()":
                 prefix = fr"\{prefix}"
             if suffix in r".^$*+?{}[]\|()":
                 suffix = fr"\{suffix}"
 
-            match = re.match(rf"(.*?{prefix})(.*?)({suffix}.*?)",i)
-            attribute = match.group(2)
+            match = re.match(fr".*?{prefix}(.*?){suffix}.*?",i)
+            attribute = match.group(1)
+            if prefix == r"\*":
+                prefix = ""
             if suffix != r"\*":
                 try: value = re.match(fr".*?{prefix}(.*?){suffix}",text).group(1)
                 except: value = None
                 rplace = re.match(fr"(.*?{prefix}.*?{suffix})",text).group(1)
             else:
-                print(prefix)
                 try: value = re.match(fr"{prefix}(.*)",text).group(1)
                 except: value = None
                 rplace = ""
             text = text.replace(rplace,"")
             setattr(self,attribute,value)
+            self.attributes.append(attribute)
         return self
