@@ -1,53 +1,50 @@
-# Usage:
+# How to use?
 
-msg = Chat("<KewlUsrnm> This is a message sent to the public chat!")
+### Simple!
 
-msg = Chat("[KewlUsrnm] This is a message sent to the public chat! But with different brackets!")
+Creating the `Chat` object:
+```python
+from chat import Chat
 
-msg = Chat("KewlUsrnm whisperes to you: This is a private message!"")
+string = <KewlUsrnm> # or chat_event.message
+txt = Chat(string)
+```
 
-msg = Chat("KewlUsrnm made the advancement [This is an advancement]")
+Getting attributes:
 
-msg = Chat("KewlUsrnm this is a message sent by the server!)
+*assuming `txt = Chat(string)`*
+```python
+txt.text
+txt.user
+txt.content
+...
+```
 
+List of attributes:
 
-## Realistic usage:
-
-msg = Chat(chat_event.message)
-
-
-# Attributes:
-
-msg.text -> the whole raw text
-
-print(msg.user) -> the username in the message (server if None)
-
-print(msg.type) -> the type of the message ("chat" for the public chat, "whisper" for whispers, "advancement" for advancements, "terminal" for server messages)
-
-print(msg.content) -> the content of the message (without the user and type)
-
-print(msg.advancement) -> False, if not an advancement, otherwise the name of the advancement
-
-print(msg.words) -> all the words in a list
-
-print(msg.timestamp) -> the exact time the text was converted to Chat object
-
-print(msg.prefix) -> the prefix of the contents. Can be used for detecting custom commands
-
-print(msg.suffix) -> the suffix of the content
+*assuming `txt = Chat(string)`*
+```python
+text -> The entire raw text (aka string). Never None or ""
+advancement -> False if not an advancement, otherwise the name of the advancement
+user -> The name of the player who sent it
+content -> The contents of the message
+type -> The type of the message (chat, whisper, terminal, advancement)
+prefix -> The prefix (first character) of the content
+suffix -> The suffix (last character) of the content
+timestamp -> The exact time the Chat object was created
+attributes -> A list of all attributes the Chat object has. Never None or []
+```
 
 # Custom attributes:
+### For when the chat is formatted differently by the server
 
-string = "`[239] VIP <KewlUsrnm> hello guys`"
+How to:
+*assuming `txt = Chat(string)`*
+```python
+txt.custom_attributes(template)
+```
 
-txt = Chat(string).strip().custom_attributes([`"[level]"," rank ","<user>"," content*"`])
-
-
-print(txt.level) -> 239
-
-print(txt.rank) -> VIP
-
-print(txt.user) -> KewlUsrnm
-
-print(txt.content) -> hello guys
+## Rules of the template:
+1. It has to be a list
+2. The items must be strings
 
