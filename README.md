@@ -88,3 +88,20 @@ template = ["[two]"] -> two = "One" (The " " (space) is not matched)
 # use a dummy attribute
 template = ["[dummy],"[two]"] -> two = "Two" (The " " (space) is not matched)
 ```
+
+# Example usage:
+```python
+# Basic example:
+string = "<KewlUsrnm> hello guys!"
+txt = Chat(string)
+print(txt.user)
+print(txt.content)
+
+# Custom attribute example:
+string = "[239] VIP <KewlUsrnm> hello guys"
+template = ["[level]"," rank ","<user>"," content*"]
+txt = Chat(string).custom_attributes(template)
+
+print(txt.rank)
+print(txt.content)
+```
