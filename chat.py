@@ -24,19 +24,17 @@ class Chat:
             self.content = ""
             self.type = "advancement"
         else:
-            causes = r"(was slain by|was shot by|was blown up by|was killed by|was killed|was fireballed by|was roasted in dragon breath(?: by)?|tried to swim in lava(?: to escape)?|walked into fire whilst fighting|burned to death|went up in flames|drowned(?: whilst trying to escape)?|suffocated in a wall(?: while fighting)?|hit the ground too hard(?: whilst trying to escape)?|fell from a high place|fell off (?:a ladder|some vines|some twisting vines|some weeping vines)|experienced kinetic energy(?: while trying to escape)?|starved to death(?: whilst fighting)?|was pricked to death|was stabbed by a sweet berry bush(?: while trying to escape)?|was impaled on a stalagmite|was struck by lightning(?: whilst fighting)?|froze to death(?: while trying to escape)?|withered away(?: whilst fighting)?|died from poison(?: while fighting)?|fell out of the world|didn't want to live in the same world as|died|blew up)"
-            match = re.match(fr"(.*?) {causes}(?: ?(.*?)? using ?(.*)?)?",self.text)
+            causes = r"(was slain by|was shot by|was blown up by|was killed(?: by)?|was fireballed by|was roasted in dragon breath(?: by)?|tried to swim in lava(?: to escape)?|walked into fire whilst fighting|burned to death|went up in flames|drowned(?: whilst trying to escape)?|suffocated in a wall(?: while fighting)?|hit the ground too hard(?: whilst trying to escape)?|fell from a high place|fell off (?:a ladder|some vines|some twisting vines|some weeping vines)|experienced kinetic energy(?: while trying to escape)?|starved to death(?: whilst fighting)?|was pricked to death|was stabbed by a sweet berry bush(?: while trying to escape)?|was impaled on a stalagmite|was struck by lightning(?: whilst fighting)?|froze to death(?: while trying to escape)?|withered away(?: whilst fighting)?|died from poison(?: while fighting)?|fell out of the world|didn't want to live in the same world as|died|blew up)"
+            match = re.match(fr"(.*?) {causes} (.*?)(?: using (.*))?$", self.text)
             if match is not None:
                 self.user = match.group(1)
-                self.reason = match.group(2)
+                try: self.reason = match.group(2)
+                except: self.reason = None
                 try: self.causer = match.group(3)
                 except: self.causer = None
                 try: self.item = match.group(4)
                 except: self.item = None
                 self.type = "death"
-                self.attributes.append("death_type")
-                self.attributes.append("causer")
-                self.attributes.append("item")
             else:
                 self.user = "server"
                 self.content = self.text
@@ -50,6 +48,8 @@ class Chat:
         self.timestamp = time()
         for i in self.__dict__:
             self.attributes.append(i)
+            if getattr(self,i) == "":
+                setattr(self,i,None)
     
     def remove_prefix(self) -> object:
         """Remove the prefix from self.content and self.words if not custom"""
@@ -83,7 +83,6 @@ class Chat:
                 prefix = fr"\{prefix}"
             if suffix in r".^$*+?{}[]\|()":
                 suffix = fr"\{suffix}"
-
             match = re.match(fr".*?{prefix}(.*?){suffix}.*?",i)
             attribute = match.group(1)
             if prefix == r"\*":
@@ -100,7 +99,3 @@ class Chat:
             setattr(self,attribute,value)
             self.attributes.append(attribute)
         return self
-
-string = "Player was killed by Player 2 using water"
-start = perf_counter()
-txt = Chat(string)
