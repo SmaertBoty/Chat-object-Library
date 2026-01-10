@@ -3,7 +3,7 @@
 ### Simple!
 
 Creating the `Chat` object:
-```python
+```py
 from chat import Chat
 
 string = <KewlUsrnm> # or chat_event.message
@@ -13,7 +13,7 @@ txt = Chat(string)
 Getting attributes:
 
 *assuming `txt = Chat(string)`*
-```python
+```py
 txt.text
 txt.user
 txt.content
@@ -33,7 +33,8 @@ prefix -> The prefix (first character) of the content
 suffix -> The suffix (last character) of the content
 timestamp -> The exact time the Chat object was created
 attributes -> A list of all attributes the Chat object has. Never None or []
-words -> all the words of "content" as a list
+words -> All the words of "content" as a list
+custom -> Wether the object was created with custom attributes (True) or not (False)
 ```
 
 # Custom attributes:
@@ -42,7 +43,7 @@ words -> all the words of "content" as a list
 How to:
 
 *assuming `txt = Chat(string)`*
-```python
+```py
 txt.custom_attributes(template)
 ```
 
@@ -84,15 +85,21 @@ template = ["word1 ","*word2 "] -> word1 = Not an attribute (the "w" gets used u
 template = ["*word1 ","*words*"] -> word1 = "hello" ; words = "world blah blah blah"
 ```
 ### What if there are multiple objects with the same prefix and suffix?
-```
+```py
 string = "[One] [Two]"
 template = ["[two]"] -> two = "One" (The " " (space) is not matched)
 # use a dummy attribute
 template = ["[dummy],"[two]"] -> two = "Two" (The " " (space) is not matched)
 ```
 
+### Helper functions
+```py
+.strip() -> remove all attributes except text and custom
+.remove_prefix() -> Remove the prefix from content and words, if its not custom
+```
+
 # Example usage:
-```python
+```py
 # Basic example:
 string = "<KewlUsrnm> hello guys!"
 txt = Chat(string)
@@ -103,6 +110,7 @@ print(txt.content)
 string = "[239] VIP <KewlUsrnm> hello guys"
 template = ["[level]"," rank ","<user>"," content*"]
 txt = Chat(string).custom_attributes(template)
+```
 
 print(txt.rank)
 print(txt.content)
