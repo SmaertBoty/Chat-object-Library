@@ -110,7 +110,6 @@ print(txt.content)
 string = "[239] VIP <KewlUsrnm> hello guys"
 template = ["[level]"," rank ","<user>"," content*"]
 txt = Chat(string).custom_attributes(template)
-```
 
 print(txt.rank)
 print(txt.content)
