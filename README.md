@@ -35,6 +35,9 @@ timestamp -> The exact time the Chat object was created
 attributes -> A list of all attributes the Chat object has. Never None or []
 words -> All the words of "content" as a list
 custom -> Wether the object was created with custom attributes (True) or not (False)
+causer -> The player / entity who caused the death (WIP)
+reason -> The reason the player died (WIP)
+item -> The item that caused the death (WIP)
 ```
 
 # Custom attributes:
