@@ -1,7 +1,7 @@
 import re
 from time import time
 class Chat:
-    def __init__(self, s:str):
+    def __init__(self, s:str) -> object:
         if not isinstance(s, str):
             raise TypeError(f"expected str, not {type(s).__name__}")
         elif s == "":
@@ -33,22 +33,21 @@ class Chat:
         self.timestamp = time()
         self.attributes = ["text","advancement","user","content","type","words","prefix","suffix","timestamp","attributes"]
     
-    def remove_prefix(self) -> str:
+    def remove_prefix(self) -> object:
         """Remove the prefix from self.content and self.words"""
         self.content = re.match(fr"{self.prefix}(.*)",self.content).group(1)
         self.words = self.content.split(" ")
+        return self
     
-    def strip(self,keep:list=None) -> object:
+    def strip(self) -> object:
         """Remove all attributes from the object, except self.text"""
         attributes = self.attributes
         for i in attributes:
-            try: k = i not in keep 
-            except: k = True
-            if hasattr(self, i) and k and i != "text":
+            if hasattr(self, i) and i != "text":
                 self.__dict__.pop(i, None)
         return self
     
-    def custom_attributes(self,template:list=None):
+    def custom_attributes(self,template:list=None) -> object:
         """Create custom attributes using a template"""
         if template is None or not isinstance(template, list):
             raise TypeError(f"Cannot use {(type(template).__name__)!r} as a template")
