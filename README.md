@@ -28,16 +28,16 @@ text -> The entire raw text (aka string). Never None or ""
 advancement -> False if not an advancement, otherwise the name of the advancement
 user -> The name of the player who sent it
 content -> The contents of the message
-type -> The type of the message (chat, whisper, terminal, advancement)
+type -> The type of the message (chat, whisper, terminal, advancement, death)
 prefix -> The prefix (first character) of the content
 suffix -> The suffix (last character) of the content
 timestamp -> The exact time the Chat object was created
 attributes -> A list of all attributes the Chat object has. Never None or []
 words -> All the words of "content" as a list
 custom -> Wether the object was created with custom attributes (True) or not (False)
-causer -> The player / entity who caused the death (WIP)
-reason -> The reason the player died (WIP)
-item -> The item that caused the death (WIP)
+causer -> The player / entity who caused the death (only for death messages)
+reason -> The reason the player / entity died (only for death messages)
+item -> The item that caused the death (only for death messages)
 ```
 
 # Custom attributes:
