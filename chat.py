@@ -1,14 +1,15 @@
 import re
-from time import time
+from time import time, perf_counter
 class Chat:
     def __init__(self, s:str) -> object:
         if not isinstance(s, str):
             raise TypeError(f"expected str, not {type(s).__name__}")
         elif s == "":
             raise ValueError("Cannot convert empty string into a Chat object")
-        self.custom = False
         self.text = s
+        self.custom = False
         self.advancement = False
+        self.attributes = []
         if re.search(r".*?<(.*?)>",self.text) is not None:
             self.user = re.match(r".*?<(.*?)>",self.text).group(1)
             self.content = self.text.replace(f"<{self.user}> ","")
@@ -23,16 +24,32 @@ class Chat:
             self.content = ""
             self.type = "advancement"
         else:
-            self.user = "server"
-            self.content = self.text
-            self.type = "terminal"
-        self.words = self.content.split(" ")
+            causes = r"(was slain by|was shot by|was blown up by|was killed by|was killed|was fireballed by|was roasted in dragon breath(?: by)?|tried to swim in lava(?: to escape)?|walked into fire whilst fighting|burned to death|went up in flames|drowned(?: whilst trying to escape)?|suffocated in a wall(?: while fighting)?|hit the ground too hard(?: whilst trying to escape)?|fell from a high place|fell off (?:a ladder|some vines|some twisting vines|some weeping vines)|experienced kinetic energy(?: while trying to escape)?|starved to death(?: whilst fighting)?|was pricked to death|was stabbed by a sweet berry bush(?: while trying to escape)?|was impaled on a stalagmite|was struck by lightning(?: whilst fighting)?|froze to death(?: while trying to escape)?|withered away(?: whilst fighting)?|died from poison(?: while fighting)?|fell out of the world|didn't want to live in the same world as|died|blew up)"
+            match = re.match(fr"(.*?) {causes}(?: ?(.*?)? using ?(.*)?)?",self.text)
+            if match is not None:
+                self.user = match.group(1)
+                self.reason = match.group(2)
+                try: self.causer = match.group(3)
+                except: self.causer = None
+                try: self.item = match.group(4)
+                except: self.item = None
+                self.type = "death"
+                self.attributes.append("death_type")
+                self.attributes.append("causer")
+                self.attributes.append("item")
+            else:
+                self.user = "server"
+                self.content = self.text
+                self.type = "terminal"
+        try: self.words = self.content.split(" ")
+        except: self.words = None
         try: self.prefix = re.match(r".",self.content).group()
         except: self.prefix = ""
         try: self.suffix = self.content[-1]
         except: self.suffix = ""
         self.timestamp = time()
-        self.attributes = ["text","advancement","user","content","type","words","prefix","suffix","timestamp","attributes"]
+        for i in self.__dict__:
+            self.attributes.append(i)
     
     def remove_prefix(self) -> object:
         """Remove the prefix from self.content and self.words if not custom"""
@@ -47,6 +64,7 @@ class Chat:
         for i in attributes:
             if hasattr(self, i) and i != "text":
                 self.__dict__.pop(i, None)
+                self.attributes.remove(i)
         return self
     
     def custom_attributes(self,template:list=None) -> object:
@@ -82,3 +100,7 @@ class Chat:
             setattr(self,attribute,value)
             self.attributes.append(attribute)
         return self
+
+string = "Player was killed by Player 2 using water"
+start = perf_counter()
+txt = Chat(string)
