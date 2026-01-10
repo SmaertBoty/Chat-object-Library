@@ -6,6 +6,7 @@ class Chat:
             raise TypeError(f"expected str, not {type(s).__name__}")
         elif s == "":
             raise ValueError("Cannot convert empty string into a Chat object")
+        self.custom = False
         self.text = s
         self.advancement = False
         if re.search(r".*?<(.*?)>",self.text) is not None:
@@ -34,13 +35,14 @@ class Chat:
         self.attributes = ["text","advancement","user","content","type","words","prefix","suffix","timestamp","attributes"]
     
     def remove_prefix(self) -> object:
-        """Remove the prefix from self.content and self.words"""
-        self.content = re.match(fr"{self.prefix}(.*)",self.content).group(1)
-        self.words = self.content.split(" ")
+        """Remove the prefix from self.content and self.words if not custom"""
+        if not self.custom:
+            self.content = re.match(fr"{self.prefix}(.*)",self.content).group(1)
+            self.words = self.content.split(" ")
         return self
     
     def strip(self) -> object:
-        """Remove all attributes from the object, except self.text"""
+        """Remove all attributes from the object, except self.text and self.custom"""
         attributes = self.attributes
         for i in attributes:
             if hasattr(self, i) and i != "text":
@@ -53,6 +55,7 @@ class Chat:
             raise TypeError(f"Cannot use {(type(template).__name__)!r} as a template")
         elif template == []:
             raise ValueError(f"Expected a non empty list, but got {template}")
+        self.custom = True
         self.attributes = []
         text = self.text
         for i in template:
