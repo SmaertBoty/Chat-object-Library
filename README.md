@@ -72,7 +72,7 @@ G= ✓
 ```
 ### PATTERNS CANNOT SHARE CHARACTERS
 ### ALL UNMATCHED CHRACTERS WILL BE SKIPPED
-**Except "*" (asterisk aka star)
+*Except `*` (asterisk aka star)
 The * signs functionality is based on if its a prefix, or suffix:
 1. If its a prefix, it represents an "" (empty) string. Usefull when the text has no prefix
 2. If its a suffix, it represents "everything from now on". Usefull specifically for "content" attribute
