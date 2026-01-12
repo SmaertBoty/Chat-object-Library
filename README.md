@@ -92,7 +92,7 @@ template = ["*word1 ","*words*"] -> word1 = "hello" ; words = "world blah blah b
 string = "[One] [Two]"
 template = ["[two]"] -> two = "One" (The " " (space) is not matched)
 # use a dummy attribute
-template = ["[dummy],"[two]"] -> two = "Two" (The " " (space) is not matched)
+template = ["[dummy]","[two]"] -> two = "Two" (The " " (space) is not matched)
 ```
 
 ### Helper functions
