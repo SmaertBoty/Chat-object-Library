@@ -6,7 +6,7 @@ Creating the `Chat` object:
 ```py
 from chat import Chat
 
-string = <KewlUsrnm> # or chat_event.message
+string = "<KewlUsrnm>" # or chat_event.message
 txt = Chat(string)
 ```
 
@@ -62,7 +62,7 @@ It looks at each item of the provided list, and gets their prefix, and suffix.
 Then, it searches the text, for that prefix and suffix, and gets everything inbetween them (excludes the prefix, and suffix)
 ```python
 template = "<custom_attribute>" # A TEMPLATE MUST BE A LIST, THIS IS JUST A PLACEHOLDER
-string = <KewlUsrnm>
+string = "<KewlUsrnm>"
 txt.custom_attribute -> KewlUsrnm
 ```
 Almost any* character can be used as prefix and suffix
