@@ -90,7 +90,8 @@ class Chat:
             if suffix != r"\*":
                 try: value = re.match(fr".*?{prefix}(.*?){suffix}",text).group(1)
                 except: value = None
-                rplace = re.match(fr"(.*?{prefix}.*?{suffix})",text).group(1)
+                try: rplace = re.match(fr"(.*?{prefix}.*?{suffix})",text).group(1)
+                except: rplace = ""
             else:
                 try: value = re.match(fr"{prefix}(.*)",text).group(1)
                 except: value = None
